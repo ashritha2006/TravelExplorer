@@ -501,7 +501,7 @@ function renderWikivoyageGuide(title){
 function renderSearchResults(query, photos) {
   elements.resultsGrid.innerHTML = '';
   if (photos.length === 0) {
-    elements.resultsGrid.innerHTML = `<div class="info-banner">No photos found. Add API key in settings or try another search.</div>`;
+    elements.resultsGrid.innerHTML = `<div class="info-banner">No photos found. Add API key or try another search.</div>`;
     return;
   }
   const uniqueByAuthor = new Map();
@@ -1011,5 +1011,6 @@ function init() {
 }
 
 init();
+
 
 
