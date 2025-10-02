@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login - Travel Explorer</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .login-wrapper { min-height: 100vh; display: grid; place-items: center; padding: 16px; }
+      .login-card { width: min(420px, 96vw); background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+      .login-title { margin: 0 0 8px 0; }
+    </style>
+  </head>
+  <body>
+    <div class="login-wrapper">
+      <div class="login-card">
+        <h1 class="login-title">Sign in</h1>
+        <p class="muted">Your favorites and itinerary will be saved to your account on this device.</p>
+        <div class="field">
+          <span>Name</span>
+          <input id="nameInput" type="text" placeholder="Your name" />
+        </div>
+        <div class="field">
+          <span>Email</span>
+          <input id="emailInput" type="text" placeholder="you@example.com" />
+        </div>
+        <button id="loginBtn" class="btn" style="width:100%">Continue</button>
+      </div>
+    </div>
+
+    <script>
+      const nameEl = document.getElementById('nameInput');
+      const emailEl = document.getElementById('emailInput');
+      const btn = document.getElementById('loginBtn');
+      function saveUser(u){ localStorage.setItem('current_user', JSON.stringify(u)); }
+      function getUser(){ try { return JSON.parse(localStorage.getItem('current_user')||'null'); } catch { return null; } }
+      const existing = getUser();
+      if (existing) { window.location.href = 'index.html'; }
+      btn.addEventListener('click', () => {
+        const name = nameEl.value.trim();
+        const email = emailEl.value.trim().toLowerCase();
+        if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { alert('Enter a valid email'); return; }
+        saveUser({ name: name || email.split('@')[0], email });
+        window.location.href = 'index.html';
+      });
+    </script>
+  </body>
+  </html>
+
+

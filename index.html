@@ -1,0 +1,153 @@
+<!Doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Travel Explorer</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand">
+        <span>🌍</span>
+        <h1>Travel Explorer</h1>
+      </div>
+      <div class="actions">
+        <div id="userBadge" class="muted"></div>
+        <div class="search">
+          <input id="searchInput" type="search" placeholder="Search destinations..." />
+          <button id="searchBtn" class="btn">Search</button>
+        </div>
+        <button id="themeToggle" class="btn" title="Toggle theme">🌓</button>
+        <button id="settingsBtn" class="btn" title="settings">⚙️</button>
+        <button id="favoritesBtn" class="btn" title="Favorites">⭐</button>
+        <button id="itineraryBtn" class="btn" title="Itinerary">📝</button>
+      </div>
+    </header>
+
+    <main class="content">
+      
+
+      <section class="chips" id="popularChips"></section>
+
+      <section class="grid" id="resultsGrid"></section>
+    </main>
+
+    <!-- Destination Modal -->
+    <dialog id="destinationModal" class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">Destination</h2>
+        <button id="modalClose" class="icon-btn" aria-label="Close">✖</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-gallery" id="modalGallery"></div>
+        <div class="modal-columns">
+          <div class="column">
+            <h3>Weather</h3>
+            <div id="weatherNow" class="weather-now"></div>
+            <div id="weatherForecast" class="forecast"></div>
+            <div class="field" style="margin-top:10px">
+              <span>Plan month</span>
+              <select id="planMonth"></select>
+            </div>
+            <div id="monthClimate" class="info-banner" style="margin-top:6px"></div>
+            <div id="bestMonths" class="chips" style="margin-top:8px"></div>
+            <div id="travelTips" class="info-banner"></div>
+            <div class="tips-grid">
+              <div>
+                <h4 style="margin:6px 0">Do's</h4>
+                <ul id="tipsDo" class="tips-list"></ul>
+              </div>
+              <div>
+                <h4 style="margin:6px 0">Don'ts</h4>
+                <ul id="tipsDont" class="tips-list"></ul>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <h3>About</h3>
+            <p id="destinationInfo"></p>
+            <div id="map" class="map"></div>
+            <div class="field" style="margin-top:10px">
+              <span>Interests</span>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <label><input type="checkbox" class="interest" value="culture"> Culture</label>
+                <label><input type="checkbox" class="interest" value="food"> Food</label>
+                <label><input type="checkbox" class="interest" value="adventure"> Adventure</label>
+                <label><input type="checkbox" class="interest" value="relax"> Relax</label>
+                <label><input type="checkbox" class="interest" value="shopping"> Shopping</label>
+              </div>
+            </div>
+            <div id="quoteBox" class="info-banner" style="margin-top:8px"></div>
+            <h3 style="margin-top:12px">Nearby Attractions</h3>
+            <div class="field">
+              <button id="otmRefresh" class="btn">Find places</button>
+            </div>
+            <div id="otmList" class="itinerary-list"></div>
+            <h3 style="margin-top:12px">Wikivoyage Guide</h3>
+            <div id="wvTabs" class="chips"></div>
+            <div id="wvContent" class="info-banner"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="favoriteToggle" class="btn">⭐ Favorite</button>
+        <button id="addToItinerary" class="btn">Add to Itinerary</button>
+      </div>
+    </dialog>
+
+    <!-- Settings Modal -->
+    <dialog id="settingsModal" class="modal">
+      <div class="modal-header">
+        <h2>API Settings</h2>
+        <button id="settingsClose" class="icon-btn">✖</button>
+      </div>
+      <div class="modal-body muted">Account & session controls.</div>
+      <div class="modal-footer">
+        <button id="logoutBtn" class="icon-btn">Logout</button>
+      </div>
+    </dialog>
+
+    <!-- Favorites Modal -->
+    <dialog id="favoritesModal" class="modal">
+      <div class="modal-header">
+        <h2>Favorites</h2>
+        <button id="favoritesClose" class="icon-btn">✖</button>
+      </div>
+      <div class="modal-body" id="favoritesList"></div>
+    </dialog>
+
+    <!-- Itinerary Modal -->
+    <dialog id="itineraryModal" class="modal">
+      <div class="modal-header">
+        <h2>Itinerary</h2>
+        <button id="itineraryClose" class="icon-btn">✖</button>
+      </div>
+      <div class="modal-body">
+        <div class="itinerary-add">
+          <input id="itineraryDate" type="date" />
+          <input id="itineraryNote" type="text" placeholder="Note" />
+          <button id="itineraryAddBtn" class="btn">Add</button>
+        </div>
+        <div id="itineraryList" class="itinerary-list"></div>
+      </div>
+    </dialog>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <!-- Optional: provide keys in code via config.js (not committed). Copy config.example.js to config.js and fill in keys. -->
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+  </html>
+
+
